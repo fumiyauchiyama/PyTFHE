@@ -2,9 +2,12 @@ from PyTFHE import trlwe_encrypt,trlwe_decrypt
 from PyTFHE import SecretKey
 from secrets import randbits
 import numpy as np
+import time
 
 np.set_printoptions(threshold=2000)
 for i in range(1000):
+    st = time.time()
+
     sk = SecretKey(
         636, #n 
         9.2511997 * (10**-5), #alpha
@@ -22,3 +25,7 @@ for i in range(1000):
         print(p)
         print(trlwe_decrypt(c,sk))
         break
+
+    et = time.time()
+    elapsed_time = et - st
+    print(f"{i}: {elapsed_time} seconds")

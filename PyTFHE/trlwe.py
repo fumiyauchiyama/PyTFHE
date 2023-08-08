@@ -22,14 +22,15 @@ def trlwe_decrypt(c, sk):
 
 def trlwe_polynomial_encrypt(p, alpha_bk, key):
     a = np.array([[randbits(32) for j in range(len(key[0]))] for i in range(len(key))], dtype=torus32)
-    p_mu = np.empty_like(p)
+    p_mu = np.empty_like(p, dtype=float)
     for i in range(len(p)):
             if p[i]==1:
                 p_mu[i] = MU
             else:
                 p_mu[i] = -MU
     
-    b = gaussian_torus32(p_mu, alpha_bk, len(key[0]))
+    
+    b = gaussian_torusring32(p_mu, alpha_bk, len(key[0]))
 
     for i in range(len(key)):
         b += polymul(a[i], key[i])
