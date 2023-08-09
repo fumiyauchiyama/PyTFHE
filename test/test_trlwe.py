@@ -1,4 +1,4 @@
-from PyTFHE import trlwe_encrypt,trlwe_decrypt
+from PyTFHE import trlwe_encrypt, trlwe_decrypt, sample_extract_index
 from PyTFHE import SecretKey
 from secrets import randbits
 import numpy as np
@@ -11,8 +11,7 @@ for i in range(1000):
     sk = SecretKey(
         636, #n 
         9.2511997 * (10**-5), #alpha
-        #2**-25, #alpha_bk
-        0,
+        2**-25, #alpha_bk
         512, #N
         3, #k
         2 #試す多項式の数

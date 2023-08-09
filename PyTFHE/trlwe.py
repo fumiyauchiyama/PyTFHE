@@ -6,6 +6,8 @@ from .polynomial import polymul
 
 MU = 1 / 8
 
+# 複数の多項式を受け付ける
+
 def trlwe_encrypt(p, sk):
     plaintextlength = len(p)
     c = np.empty((plaintextlength, sk.params.k+1, sk.params.N),dtype = np.uint32)
@@ -19,6 +21,8 @@ def trlwe_decrypt(c, sk):
     for i in range(ciphertextlength):
         ret[i] = trlwe_polynomial_decrypt(c[i],sk.key.trlwe)
     return ret
+
+# 多項式を一つ受け付ける
 
 def trlwe_polynomial_encrypt(p, alpha_bk, key):
     a = np.array([[randbits(32) for j in range(len(key[0]))] for i in range(len(key))], dtype=torus32)
@@ -46,3 +50,23 @@ def trlwe_polynomial_decrypt(c,key):
         pm += polymul(a[j], key[j])
     
     return (1 + np.sign(np.int32(b) - pm))/2
+
+def sample_extract_index(c, x_index:int):
+    a = c[:len(c)-1]
+    b = c[len(c)-1]
+
+    k = len(a)
+    N = len(a[0])
+
+    b_sei = b[x_index]
+
+    a_sei = np.zeros((k, N), dtype=np.uint32)
+    for j in range(k):
+        for i in range(x_index+1):
+            a_sei[j][i] = a[j][x_index-i]
+        for i in range(x_index+1, N):
+            a_sei[j][i] = -a[j][N + x_index - i]
+
+    print(a_sei.shape, b_sei.shape)
+
+    return np.append(a_sei, b_sei)

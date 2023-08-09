@@ -5,5 +5,6 @@ PyTFHE.egg-info/SOURCES.txt
 PyTFHE.egg-info/dependency_links.txt
 PyTFHE.egg-info/requires.txt
 PyTFHE.egg-info/top_level.txt
+test/test_sei.py
 test/test_tlwe.py
 test/test_trlwe.py
