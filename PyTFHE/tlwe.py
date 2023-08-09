@@ -20,10 +20,15 @@ def tlwe_decrypt(c, sk):
     return np.array([tlwe_binary_decrypt(c[i],sk.key.tlwe) for i in range(ciphertextlength)])
 
 def tlwe_binary_encrypt(p, alpha, key):
-    a = np.array([randbits(32) for i in range(len(key))], dtype=torus32)
+    a = np.array([randbits(32) for i in range(len(key))], dtype=np.uint32)
     b = gaussian_torus32(p, alpha, 1)[0] + np.dot(a, key)
-    print(torus32(p), gaussian_torus32(p, alpha, 1)[0])
+    print('m + e: ', gaussian_torus32(p, alpha, 1)[0])
+    print('a.shape: ', a.shape, ' b.shape: ', b.shape)
     return np.append(a, b)
 
 def tlwe_binary_decrypt(c,key):
-    return (1 + np.sign(np.int32(c[len(key)]) - np.dot(c[:len(key)],key)))/2
+    print(c)
+    print(c.shape, key.shape)
+    print(c[len(key)])
+    print(np.dot(c[:len(key)],key))
+    return (1 + np.sign(np.int32(c[len(key)] - np.dot(c[:len(key)],key))))/2

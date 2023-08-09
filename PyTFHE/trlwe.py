@@ -60,13 +60,19 @@ def sample_extract_index(c, x_index:int):
 
     b_sei = b[x_index]
 
+    print('--------')
+
+
+
     a_sei = np.zeros((k, N), dtype=np.uint32)
     for j in range(k):
         for i in range(x_index+1):
-            a_sei[j][i] = a[j][x_index-i]
+            a_sei[j][i] = a[j][x_index - i].copy()
         for i in range(x_index+1, N):
-            a_sei[j][i] = -a[j][N + x_index - i]
+            a_sei[j][i] = -a[j][N + x_index - i].copy()
 
-    print(a_sei.shape, b_sei.shape)
+    a_sei = np.ravel(a_sei, order="C")
+
+    print(a.dtype, b.dtype, a_sei.dtype)
 
     return np.append(a_sei, b_sei)
