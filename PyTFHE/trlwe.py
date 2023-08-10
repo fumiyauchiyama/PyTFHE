@@ -33,11 +33,12 @@ def trlwe_polynomial_encrypt(p, alpha_bk, key):
             else:
                 p_mu[i] = -MU
     
-    
+    print(p_mu, alpha_bk, len(key[0]))
     b = gaussian_torusring32(p_mu, alpha_bk, len(key[0]))
 
     for i in range(len(key)):
         b += polymul(a[i], key[i])
+
 
     return np.vstack((a, b))
 
@@ -52,6 +53,7 @@ def trlwe_polynomial_decrypt(c,key):
     return (1 + np.sign(np.int32(b) - pm))/2
 
 def sample_extract_index(c, x_index:int):
+
     a = c[:len(c)-1]
     b = c[len(c)-1]
 
@@ -59,10 +61,6 @@ def sample_extract_index(c, x_index:int):
     N = len(a[0])
 
     b_sei = b[x_index]
-
-    print('--------')
-
-
 
     a_sei = np.zeros((k, N), dtype=np.uint32)
     for j in range(k):
@@ -72,7 +70,5 @@ def sample_extract_index(c, x_index:int):
             a_sei[j][i] = -a[j][N + x_index - i].copy()
 
     a_sei = np.ravel(a_sei, order="C")
-
-    print(a.dtype, b.dtype, a_sei.dtype)
 
     return np.append(a_sei, b_sei)

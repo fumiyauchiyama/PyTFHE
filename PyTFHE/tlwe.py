@@ -22,13 +22,7 @@ def tlwe_decrypt(c, sk):
 def tlwe_binary_encrypt(p, alpha, key):
     a = np.array([randbits(32) for i in range(len(key))], dtype=np.uint32)
     b = gaussian_torus32(p, alpha, 1)[0] + np.dot(a, key)
-    print('m + e: ', gaussian_torus32(p, alpha, 1)[0])
-    print('a.shape: ', a.shape, ' b.shape: ', b.shape)
     return np.append(a, b)
 
 def tlwe_binary_decrypt(c,key):
-    print(c)
-    print(c.shape, key.shape)
-    print(c[len(key)])
-    print(np.dot(c[:len(key)],key))
-    return (1 + np.sign(np.int32(c[len(key)] - np.dot(c[:len(key)],key))))/2
+    return int((1 + np.sign(np.int32(c[len(key)] - np.dot(c[:len(key)],key))))/2)

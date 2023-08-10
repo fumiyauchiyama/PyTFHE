@@ -6,9 +6,9 @@ def polymul(a:np.array, b:np.array):
     for i in range(len(a)):
         for j in range(len(b)):
             if(i+j<len(a)):
-                res[i+j] += a[i]*b[i]
+                res[i+j] += a[i]*b[j]
             else:
-                res[i+j-len(a)] -= a[i]*b[i]
+                res[i+j-len(a)] -= a[i]*b[j]
                 
     
     return res
