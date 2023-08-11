@@ -33,7 +33,6 @@ def trlwe_polynomial_encrypt(p, alpha_bk, key):
             else:
                 p_mu[i] = -MU
     
-    print(p_mu, alpha_bk, len(key[0]))
     b = gaussian_torusring32(p_mu, alpha_bk, len(key[0]))
 
     for i in range(len(key)):

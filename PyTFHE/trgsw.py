@@ -20,8 +20,13 @@ def decomposition(trlwe, params):
 def trgsw_encrypt(p, params, key):
     l = len(params.h)
     N = len(key[0])
-    zero_matrix = [[trlwe_polynomial_encrypt(np.zeros(N), params.alpha_bk, key)] for i in range((params.k+1)*l)]
+    #zero_matrix = np.array([trlwe_polynomial_encrypt(np.zeros(N), params.alpha_bk, key) for i in range((params.k+1)*l)], dtype=np.uint32)
+    #external productのテスト用に一旦ゼロ行列を無効化
+    zero_matrix = np.zeros(((params.k+1)*l, params.k+1, N), dtype=np.uint32)
     mu_h = torus32(np.outer(params.h, p))
+
+    print('zero_matrix', zero_matrix.shape)
+    print(zero_matrix[2*l:(2+1)*l, 2].shape)
 
     for i in range(params.k+1):
         zero_matrix[i*l:(i+1)*l, i] += mu_h
@@ -29,8 +34,21 @@ def trgsw_encrypt(p, params, key):
     return zero_matrix
 
 def trgsw_external_product(g, r, params):
-    decvec = decomposition(r, params)
-    return np.array([np.sum([polymul(decvec[j], g[i][j]) for j in range(2 * params.l)], axis=0) for i in range(params.k+1)])
+    decvec = np.array([decomposition(i, params) for i in r])
+    print(decvec.shape)
+    decvec = decvec.reshape(-1, params.N)
+    return np.array(
+        [
+            np.sum(
+                [
+                    polymul(decvec[j], g.transpose((1,0,2))[i][j]) 
+                    for j in range((params.k+1) * params.l)
+                ]
+                , axis=0) 
+            
+            for i in range(params.k+1)
+        ]
+        )
     # return np.array(
     #     [
     #         np.sum(
